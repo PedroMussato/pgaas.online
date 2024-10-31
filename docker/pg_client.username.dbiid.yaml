@@ -1,0 +1,19 @@
+version: '3.9'
+
+services:
+    pg.username.dbiid:
+        image: postgres:latest # Allow the client to specify the version
+        restart: always
+        ports:
+            - 1234:5432 # Use a random port for the client
+        expose:
+            - 1234 # Use the same port internally
+        environment:
+            POSTGRES_PASSWORD: postgres # Generate a random password
+        volumes:
+            - /var/username/dbiid/data:/var/lib/postgresql/data # Adjust path as needed
+        deploy:
+            resources:
+                limits:
+                    cpus: '0.5' # Limit CPU usage (e.g., 0.5 cores)
+                    memory: 512M # Limit RAM (e.g., 512 MB)
