@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}Create Database{% endblock %}
+
+{% block content %}
+
+<form method="POST">
+    {% csrf_token %}
+    <div class="mb-3">
+        <label class="form-label">Database name:</label>
+        <input type="text" style="background-color: rgb(50, 50, 50); color: white;" name="databasename" class="form-control" aria-describedby="database name">
+        <div class="form-text">Must to be unique</div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Create</button>
+</form>
+
+{% endblock %}

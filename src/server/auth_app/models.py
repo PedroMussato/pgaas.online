@@ -14,3 +14,5 @@ class AuthenticationActions(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     ip = models.CharField(max_length=256)
     success = models.BooleanField()
+
+

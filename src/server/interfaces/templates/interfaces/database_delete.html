@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}Delete Database{% endblock %}
+
+{% block content %}
+
+<form method="POST">
+    {% csrf_token %}
+
+    <p>
+        Are you sure you want to delete the database <strong>{{dbi.name}}? It will not be possible to undo this.</strong>
+    </p>
+
+    <button type="submit" class="btn btn-primary">Delete</button>
+</form>
+
+{% endblock %}

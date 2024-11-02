@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}Databases{% endblock %}
+
+{% block content %}
+
+<div class="m-4">
+    <div class="list-group">
+        {% for database in databases %}
+        <a href="/database/{{database.id}}/"  style="background-color: rgb(50, 50, 50); color: white;" class="list-group-item list-group-item-action">{{database.name}}</a>
+        {% endfor %}
+    </div>
+    
+    <a href="/database/create/" class="mt-4 btn btn-primary">Create DB</a>
+</div>
+
+{% endblock %}
