@@ -12,6 +12,7 @@ class DataBaseInstace(models.Model):
     instance_disk = models.IntegerField(default=100)
     status = models.CharField(max_length=256, default='on-creation')
     password = models.CharField(max_length=256, default='')
+    port = models.IntegerField(default=0)
 
 class AgentToken(models.Model):
     name = models.CharField(max_length=256, default='')

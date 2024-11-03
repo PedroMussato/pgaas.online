@@ -16,6 +16,14 @@ def create_random_pwd(length):
     return password
 
 
+def get_db_avail_port():
+    while True:
+        port = random.randint(20_000,30_000)
+        dbs = DataBaseInstace.objects.filter(port=port)
+        if not dbs:
+            break
+    return port
+
 # Create your views here.
 def home(request):
     return render(request, 'interfaces/home.html')
@@ -44,6 +52,7 @@ def database_create(request):
             dbi.instance_ram = 128
             dbi.instance_disk = 100
             dbi.password = create_random_pwd(128)
+            dbi.port = get_db_avail_port()
             dbi.status = 'on-creation'
             dbi.save()
 
@@ -98,9 +107,13 @@ def agent_communication(request, id):
         for dbi in dbis:
             data[f'{dbi.owner.id}-{dbi.id}'] = {
                 'status': dbi.status,
+                'userid': dbi.owner.id,
+                'dbiid': dbi.id,
                 'cpu': dbi.instance_cpu,
                 'ram': dbi.instance_ram,
                 'disk': dbi.instance_disk,
+                'password': dbi.password,
+                'port': dbi.port,
             }
 
         return JsonResponse(data, status=200)
