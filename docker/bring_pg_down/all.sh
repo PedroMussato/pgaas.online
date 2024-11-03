@@ -5,3 +5,4 @@
 ./remove_local_iso_from_fstab.sh $1 $2
 ./umount_vfs.sh $1 $2
 ./remove_db.sh $1 $2
+

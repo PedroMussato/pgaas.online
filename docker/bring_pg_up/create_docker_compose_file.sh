@@ -1,5 +1,5 @@
 echo "" > /var/dbs/$1/$2/pg_$1_$2.yaml
-echo "version: '3.9'" >> /var/dbs/$1/$2/pg_$1_$2.yaml
+#echo "version: '3.9'" >> /var/dbs/$1/$2/pg_$1_$2.yaml
 echo "" >> /var/dbs/$1/$2/pg_$1_$2.yaml
 echo "services:" >> /var/dbs/$1/$2/pg_$1_$2.yaml
 echo "    pg.$1.$2:" >> /var/dbs/$1/$2/pg_$1_$2.yaml
