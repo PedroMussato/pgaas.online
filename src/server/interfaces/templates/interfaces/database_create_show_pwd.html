@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}Delete Database{% endblock %}
+
+{% block content %}
+
+<div class="m4">
+    <p>
+        The DB password for user postgres is:
+    </p>
+    <p>
+        <strong>{{dbi.password}}</strong>
+    </p>
+    <p>
+        copy it now, you'll never see this again.
+    </p>
+
+    <a href="/databases/" class="btn btn-primary">Go to Databases</a>
+
+</div>
+
+
+{% endblock %}

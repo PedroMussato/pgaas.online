@@ -10,8 +10,43 @@
         <label class="form-label">Database name:</label>
         <input type="text" style="background-color: rgb(50, 50, 50); color: white;" name="databasename" class="form-control" aria-describedby="database name">
         <div class="form-text">Must to be unique</div>
-        <div class="form-text">By default 0.1 cpu, 128M RAM, 100M disk.</div>
     </div>
+
+    <div class="mb-3">
+        <div class="form-label">
+            vCPU (field disabled):
+        </div>
+        <div>
+            <select class="form-select" style="background-color: rgb(50, 50, 50); color: white;" disabled aria-label="Default select example">
+                <option selected>0.1vCPU</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <div class="form-label">
+            RAM (field disabled):
+        </div>
+        <div>
+            <select class="form-select" style="background-color: rgb(50, 50, 50); color: white;" disabled aria-label="Default select example">
+                <option selected>128M</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <div class="form-label">
+            DISK (in M) (field disabled):
+        </div>
+        <div>
+            <input type="number" style="background-color: rgb(50, 50, 50); color: white;" class="form-control" value="100" disabled>
+        </div>
+    </div>
+
+    <div class="mb-3 form-text">By default 0.1 cpu, 128M RAM and 100M disk, not possible to change yet.</div>
+
+    <div class="mb-3 form-text">Password will be auto generated and you'll be able to see next.</div>
+
 
     <button type="submit" class="btn btn-primary">Create</button>
 </form>

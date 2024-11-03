@@ -1,8 +1,19 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from .models import DataBaseInstace
+from .models import DataBaseInstace, AgentToken
 from django.contrib.auth.models import User
 from django.shortcuts import HttpResponseRedirect
+import random
+from django.http import JsonResponse, HttpResponse
+from django.shortcuts import get_object_or_404
+import uuid
+
+def create_random_pwd(length):
+    chars = 'abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+    password = ''
+    for _ in range(length):
+        password += chars[random.randint(0,len(chars)-1)]
+    return password
 
 
 # Create your views here.
@@ -29,8 +40,14 @@ def database_create(request):
             dbi = DataBaseInstace()
             dbi.name = request.POST['databasename']
             dbi.owner = User.objects.get(id=request.user.id)
+            dbi.instance_cpu = 0.1
+            dbi.instance_ram = 128
+            dbi.instance_disk = 100
+            dbi.password = create_random_pwd(128)
+            dbi.status = 'on-creation'
             dbi.save()
-            return HttpResponseRedirect('/databases/')
+
+            return render(request, 'interfaces/database_create_show_pwd.html', context={'responses':responses, 'dbi':dbi})
 
     return render(request, 'interfaces/database_create.html', context={'responses':responses})
 
@@ -62,3 +79,35 @@ def database_delete(request,id):
             return HttpResponseRedirect('/databases/')
 
     return render(request, 'interfaces/database_delete.html', context={'responses':responses,'dbi':dbi})
+
+def agent_communication(request, id):
+    # Check if token exists and is valid
+
+    tokens = AgentToken.objects.all()
+    check = False
+    for token in tokens:
+        if id in str(token.uuid):
+            check=True
+    if check == False:
+        return HttpResponse('Unauthorized', status=401)
+        
+    if request.method == 'GET':
+        dbis = DataBaseInstace.objects.exclude(status='done')
+        
+        data = {}
+        for dbi in dbis:
+            data[f'{dbi.owner.id}-{dbi.id}'] = {
+                'status': dbi.status,
+                'cpu': dbi.instance_cpu,
+                'ram': dbi.instance_ram,
+                'disk': dbi.instance_disk,
+            }
+
+        return JsonResponse(data, status=200)
+    
+    elif request.method == 'POST':
+        # Add POST handling logic here if needed
+        return JsonResponse({'message': 'POST request handled'}, status=200)
+    
+    else:
+        return HttpResponse('Method not allowed', status=405)
