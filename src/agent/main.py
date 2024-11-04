@@ -5,6 +5,18 @@ import time
 import os
 import datetime
 
+with open('agent.conf', 'r') as conf_file:
+    conf_lines = conf_file.read().split('\n')
+    for line in conf_lines:
+        key = line.splt('=')[0]
+        value = line.splt('=')[1]
+        if key == 'KEY':
+            KEY = key
+        elif key == 'SERVER':
+            SERVER = value
+
+ENDPOINT=f'agent_communication/{KEY}/'
+
 def create_db():
     with sqlite3.connect('agent.sqlite3') as conn:
         cursor = conn.cursor()
@@ -65,10 +77,6 @@ def inform_deletion(userid, dbiid):
             file.write(f'https://{SERVER}{ENDPOINT},{userid},{dbiid},deleted\n')
 
 create_db()
-
-KEY = '7d6fb54a-7c2b-41dd-9d75-44fb3f668ac6'
-SERVER = 'http://localhost:8000/'
-ENDPOINT = f'agent_communication/{KEY}/'
 
 with open('response_again.data', 'a+') as file:
     pass
