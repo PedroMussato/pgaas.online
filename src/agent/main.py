@@ -32,7 +32,7 @@ def insert_task(userid, dbiid, task_order, task, status):
 def get_next_task():
     with sqlite3.connect('agent.sqlite3') as conn:
         cursor = conn.cursor()
-        cursor.execute("select id, task from tasks where not status = 'done' ORDER BY id LIMIT 1 ;")
+        cursor.execute("select id, task, status, task_order, userid, dbiid from tasks where not status = 'done' ORDER BY id LIMIT 1 ;")
         rows = cursor.fetchall()
         return rows
 
@@ -46,6 +46,27 @@ def mark_task_as_done(id):
         ''')
         conn.commit()
     
+def inform_creation(userid, dbiid):
+    while True:
+        data = dict()
+        data[f'{userid}-{dbiid}'] = 'created'
+        response = requests.post(SERVER + ENDPOINT, json=data)
+        if response.status_code == 200:
+            break
+        else:
+            time.sleep(2)
+
+
+def inform_deletion(userid, dbiid):
+    while True:
+        data = dict()
+        data[f'{userid}-{dbiid}'] = 'deleted'
+        response = requests.post(SERVER + ENDPOINT, json=data)
+        if response.status_code == 200:
+            break
+        else:
+            time.sleep(2)
+
 create_db()
 
 KEY = '7d6fb54a-7c2b-41dd-9d75-44fb3f668ac6'
@@ -54,19 +75,27 @@ ENDPOINT = f'agent_communication/{KEY}/'
 
 while True:
     # check local db for not finished taks
-    tasks = get_next_task()
-    if tasks:
-        id = tasks[0][0]
-        task = tasks[0][1]
-        # execute tasks
-        # Run the command and get a file-like object
-        with os.popen(task) as process:
-            for line in process:
-                print(line.strip())  # Process each line of output as it comes
-        mark_task_as_done(id)
+    while True:
+        tasks = get_next_task()
+        if tasks:
+            id = tasks[0][0]
+            task = tasks[0][1]
+            status = tasks[0][2]
+            task_order = tasks[0][3]
+            userid = tasks[0][4]
+            dbiid = tasks[0][5]
 
-
-        ## when executed, return to server the status
+            # execute tasks # Run the command and get a file-like object
+            with os.popen(task) as process:
+                for line in process:
+                    print(line.strip())  # Process each line of output as it comes
+            if status == 'todo-create' and task_order == 8:
+                inform_creation(userid, dbiid)
+            elif status == 'todo-delete' and task_order == 4:
+                inform_deletion(userid, dbiid)
+            mark_task_as_done(id)
+        else:
+            break
 
     # make a request to get taks
     response = requests.get(SERVER + ENDPOINT)
@@ -256,6 +285,4 @@ echo $?
                 pass
 
 
-#    time.sleep(60)
-
-
+    time.sleep(10)

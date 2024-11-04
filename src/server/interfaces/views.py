@@ -7,6 +7,8 @@ import random
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import get_object_or_404
 import uuid
+import json
+from django.views.decorators.csrf import csrf_exempt
 
 def create_random_pwd(length):
     chars = 'abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
@@ -31,7 +33,7 @@ def home(request):
 @login_required(login_url='/auth_app/login/')
 def databases(request):
 
-    databases = DataBaseInstace.objects.filter(owner=User.objects.get(id=request.user.id))
+    databases = DataBaseInstace.objects.filter(owner=User.objects.get(id=request.user.id)).exclude(status='deleted').order_by('name')
 
     return render(request, 'interfaces/databases.html', context={'databases':databases})
 
@@ -90,6 +92,7 @@ def database_delete(request,id):
 
     return render(request, 'interfaces/database_delete.html', context={'responses':responses,'dbi':dbi})
 
+@csrf_exempt
 def agent_communication(request, id):
     # Check if token exists and is valid
 
@@ -120,6 +123,22 @@ def agent_communication(request, id):
         return JsonResponse(data, status=200)
     
     elif request.method == 'POST':
+        print(request)
+        data = json.loads(request.body)
+        print(data)
+        for k in data.keys():
+            userid = int(k.split('-')[0])
+            dbiid = int(k.split('-')[1])
+            if data[k] == 'created':
+                dbi = DataBaseInstace.objects.get(id=dbiid)
+                dbi.status = 'created'
+                dbi.save()
+                
+            elif data[k] == 'deleted':
+                dbi = DataBaseInstace.objects.get(id=dbiid)
+                dbi.status = 'deleted'
+                dbi.save()
+
         # Add POST handling logic here if needed
         return JsonResponse({'message': 'POST request handled'}, status=200)
     
