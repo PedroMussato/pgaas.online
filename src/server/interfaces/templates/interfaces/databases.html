@@ -7,7 +7,7 @@
 <div class="m-4">
     <div class="list-group">
         {% for database in databases %}
-        <a href="/database/{{database.id}}/"  style="background-color: rgb(50, 50, 50); color: white;" class="list-group-item list-group-item-action">{{database.name}}</a>
+        <a href="/database/{{database.id}}/"  style="background-color: rgb(50, 50, 50); color: white;" class="list-group-item list-group-item-action">{% if database.status == 'on-deletion' %}ON DELETION -> {% endif %}{{database.name}}</a>
         {% endfor %}
     </div>
     

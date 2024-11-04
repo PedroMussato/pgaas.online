@@ -84,7 +84,8 @@ def database_delete(request,id):
         dbi = DataBaseInstace.objects.get(id=id)
 
         if request.method == 'POST':
-            dbi.delete()
+            dbi.status = 'on-deletion'
+            dbi.save()
             return HttpResponseRedirect('/databases/')
 
     return render(request, 'interfaces/database_delete.html', context={'responses':responses,'dbi':dbi})
