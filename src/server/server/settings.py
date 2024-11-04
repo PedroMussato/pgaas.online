@@ -125,3 +125,15 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+with open(os.path.join(BASE_DIR,'server.conf'), 'r') as server_conf_file:
+    lines = server_conf_file.read().split('\n')
+    for line in lines:
+        if line.split('=')[0] == 'SMTP_LOGIN'
+            SMTP_LOGIN=line.split('=')[1]
+        elif line.split('=')[0] == 'SMTP_PWD'
+            SMTP_PWD=line.split('=')[1]
+        elif line.split('=')[0] == 'SMTP_SERVER'
+            SMTP_SERVER=line.split('=')[1]
+        elif line.split('=')[0] == 'SMTP_PORT'
+            SMTP_PORT=line.split('=')[1]

@@ -12,6 +12,7 @@ import smtplib
 from django.http import HttpRequest
 from .models import AuthenticationActions
 from datetime import datetime, timedelta
+from django.conf import settings
 
 def get_client_ip(request):
     # Assuming request is an instance of HttpRequest
@@ -52,10 +53,10 @@ def password_complexity_check(password):
 
 def send_password_recovery_mail(token):
     # informações iniciais
-    login_email = os.environ['SMTP_LOGIN']
-    senha_email = os.environ['SMTP_PWD']
-    server_smtp = os.environ['SMTP_SERVER']
-    porta_smtp = os.environ['SMTP_PORT']
+    login_email = settings.SMTP_LOGIN
+    senha_email = settings.SMTP_PWD
+    server_smtp = settings.SMTP_SERVER
+    porta_smtp = settings.SMTP_PORT
 
     # montagem da mensagem
     msg = MIMEMultipart()
