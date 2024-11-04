@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from .models import DataBaseInstace, AgentToken
+from .models import DataBaseInstace, AgentToken, UserRole
 from django.contrib.auth.models import User
 from django.shortcuts import HttpResponseRedirect
 import random
@@ -43,7 +43,22 @@ def database_create(request):
 
     if request.method == 'POST':
 
-        if DataBaseInstace.objects.filter(owner=User.objects.get(id=request.user.id), name=request.POST['databasename']).exclude(status='deleted'):
+        user = User.objects.get(id=request.user.id)
+
+        role = UserRole.objects.filter(userid=user)
+        if role:
+            role = role[0]
+        else:
+            role = UserRole()
+            role.userid = user
+            role.save()
+
+        if role.role == 'free-tier':
+            current_running_dbs = DataBaseInstace.objects.filter(owner=user).exclude(status='deleted')
+            if len(current_running_dbs) >= 1:
+                responses.append('You are in the limit of the free tier.')
+
+        if DataBaseInstace.objects.filter(owner=user, name=request.POST['databasename']).exclude(status='deleted'):
             responses.append('You already have a database with this name.')
 
         if not responses:

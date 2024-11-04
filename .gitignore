@@ -21,6 +21,7 @@ htmlcov/
 
 # Database files
 *.sqlite3
+*.data
 
 # Static files
 /staticfiles/

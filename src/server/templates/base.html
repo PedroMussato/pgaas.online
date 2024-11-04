@@ -58,7 +58,7 @@
     {% if responses %}
     <ul>
         {% for response in responses %}
-            <li style="color: {{ response.color }};"> {{response.text}} </li>
+            <li style="color: {% if response.color %}{{ response.color }}{% else %} red {% endif %};"> {% if response.text %}{{response.text}}{% else %}{{response}}{% endif %}</li>
         {% endfor %}
     </ul>
     {% endif %}

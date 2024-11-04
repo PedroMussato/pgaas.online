@@ -17,3 +17,7 @@ class DataBaseInstace(models.Model):
 class AgentToken(models.Model):
     name = models.CharField(max_length=256, default='')
     uuid = models.UUIDField(default = uuid.uuid4)
+
+class UserRole(models.Model):
+    userid = models.ForeignKey(User, on_delete=models.CASCADE)
+    role = models.CharField(max_length=256, default='free-tier')
