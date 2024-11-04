@@ -3,6 +3,7 @@ import json
 import sqlite3
 import time
 import os
+import datetime
 
 def create_db():
     with sqlite3.connect('agent.sqlite3') as conn:
@@ -84,6 +85,10 @@ while True:
             userid = tasks[0][4]
             dbiid = tasks[0][5]
 
+            # log executions
+            with open('tasks_executed.data', 'a+') as task_data_file:
+                task_data_file.write(f'\n\n#{datetime.datetime.now()}\n{task}\n')
+
             # execute tasks # Run the command and get a file-like object
             with os.popen(task) as process:
                 for line in process:
@@ -98,8 +103,6 @@ while True:
 
     with open('response_again.data', 'r') as file:
         lines = file.read().split('\n')
-    
-    print(lines)
 
     for line in lines:
         if line:
