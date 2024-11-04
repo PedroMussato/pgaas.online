@@ -14,12 +14,16 @@
         host : localhost
     </p>
 
-
     <p>
         port : {{dbi.port}}
     </p>
 
+    <p>
+        status : {{dbi.status}}
+    </p>
+    {% if dbi.status != 'deleted' and dbi.status != 'on-creation' %}
     <a href="/database/delete/{{dbi.id}}/" class="btn btn-primary">Delete Database</a>
+    {% endif %}
 </div>
 
 {% endblock %}

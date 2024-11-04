@@ -43,7 +43,7 @@ def database_create(request):
 
     if request.method == 'POST':
 
-        if DataBaseInstace.objects.filter(owner=User.objects.get(id=request.user.id), name=request.POST['databasename']):
+        if DataBaseInstace.objects.filter(owner=User.objects.get(id=request.user.id), name=request.POST['databasename']).exclude(status='deleted'):
             responses.append('You already have a database with this name.')
 
         if not responses:
@@ -105,7 +105,7 @@ def agent_communication(request, id):
         return HttpResponse('Unauthorized', status=401)
         
     if request.method == 'GET':
-        dbis = DataBaseInstace.objects.exclude(status='done')
+        dbis = DataBaseInstace.objects.exclude(status='created').exclude(status='deleted')
         
         data = {}
         for dbi in dbis:
