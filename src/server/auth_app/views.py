@@ -13,6 +13,7 @@ from django.http import HttpRequest
 from .models import AuthenticationActions
 from datetime import datetime, timedelta
 from django.conf import settings
+import uuid
 
 def get_client_ip(request):
     # Assuming request is an instance of HttpRequest
@@ -57,6 +58,7 @@ def send_password_recovery_mail(token):
     senha_email = settings.SMTP_PWD
     server_smtp = settings.SMTP_SERVER
     porta_smtp = settings.SMTP_PORT
+    SERVER_URL = settings.SERVER_URL
 
     # montagem da mensagem
     msg = MIMEMultipart()
@@ -69,7 +71,7 @@ def send_password_recovery_mail(token):
     <h3>PASSWORD RECOVERT</h3>
     <p>To recover your password please click in the link bellow or copy and paste on your browser:</p>
     <p>
-    <a href="http://{os.environ['SERVER_URL']}/auth_app/reset_password/{token.token}">http://{os.environ['SERVER_URL']}/auth_app/reset_password/{token.token}</a>
+    <a href="https://{SERVER_URL}/auth_app/reset_password/{token.token}">https://{SERVER_URL}/auth_app/reset_password/{token.token}</a>
     </p>
     </body>
     </html>"""
@@ -253,7 +255,7 @@ def reset_password(request, token=''):
         action.authentication_type = 'reset_password'
 
         try:
-            token = ResetPasswordToken.objects.filter(token=token)
+            token = ResetPasswordToken.objects.filter(token=uuid.UUID(token))
         except:
             responses.append({
                 'color':'red',

@@ -137,3 +137,5 @@ with open(os.path.join(BASE_DIR,'server.conf'), 'r') as server_conf_file:
             SMTP_SERVER=line.split('=')[1]
         elif line.split('=')[0] == 'SMTP_PORT':
             SMTP_PORT=line.split('=')[1]
+        elif line.split('=')[0] == 'SERVER_URL':
+            SERVER_URL=line.split('=')[1]
