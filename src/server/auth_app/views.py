@@ -64,11 +64,11 @@ def send_password_recovery_mail(token):
     msg = MIMEMultipart()
     msg['From'] = login_email
     msg['To'] = token.user_fk.email
-    msg['Subject'] = "PASSWORD RECOVERT"
+    msg['Subject'] = "PASSWORD RECOVERY"
     body = f"""
     <html>
     <body>
-    <h3>PASSWORD RECOVERT</h3>
+    <h3>PASSWORD RECOVERY</h3>
     <p>To recover your password please click in the link bellow or copy and paste on your browser:</p>
     <p>
     <a href="https://{SERVER_URL}/auth_app/reset_password/{token.token}">https://{SERVER_URL}/auth_app/reset_password/{token.token}</a>
